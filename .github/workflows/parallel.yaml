@@ -1,0 +1,13 @@
+name: Parallel workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-parallel:
+    uses: remypar5/gh-parallel-actions/.github/workflows/main.yaml@main
+    with:
+      run-type: parallel

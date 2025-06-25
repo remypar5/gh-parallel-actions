@@ -1,0 +1,13 @@
+name: Sequential workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-sequential:
+    uses: remypar5/gh-parallel-actions/.github/workflows/main.yaml@main
+    with:
+      run-type: sequential

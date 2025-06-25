@@ -1,10 +1,12 @@
 name: Main Workflow
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      run-type:
+        type: string
+        required: true
+        description: The type of the run. Either 'sequential' or 'parallel'.
 
 jobs:
   build-and-verify:
@@ -12,13 +14,8 @@ jobs:
     uses: remypar5/gh-parallel-actions/.github/workflows/build-and-verify.yaml@main
     with:
       ref: ${{ github.ref }}
-      run-type: ${{ matrix.run-type }}
+      run-type: ${{ inputs.run-type }}
       node_version: 18
-    strategy:
-      matrix:
-        run-type:
-          - 'sequential'
-          - 'parallel'
 
 
   process-build:
@@ -28,7 +25,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-artifacts
+          name: build-artifacts-${{ inputs.run-type }}
           path: build-output/
 
       - name: Process build
@@ -45,7 +42,7 @@ jobs:
       - name: Download verification artifacts
         uses: actions/download-artifact@v4
         with:
-          name: verification-artifacts
+          name: verification-artifacts-${{ inputs.run-type }}
           path: verification-output/
 
       - name: Process artifacts

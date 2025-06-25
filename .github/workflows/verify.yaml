@@ -31,7 +31,7 @@ jobs:
         if: ${{ inputs.run-type == 'sequential' }}
         uses: actions/download-artifact@v4
         with:
-          name: build-artifacts
+          name: build-artifacts-${{ inputs.run-type }}
           path: dist/
 
       - name: Run tests
@@ -69,6 +69,6 @@ jobs:
       - name: Upload verification artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: verification-artifacts
+          name: verification-artifacts-${{ inputs.run-type }}
           path: reports/
           retention-days: 1
