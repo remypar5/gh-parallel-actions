@@ -5,7 +5,7 @@ on:
     inputs:
       ref:
         type: string
-        required: false
+        required: true
       node_version:
         type: number
         required: false
@@ -33,6 +33,7 @@ jobs:
           echo "Installing dependencies..."
           # Simulate dependency installation
           sleep 5
+          echo "Successfully installed dependencies"
 
       - name: Build application
         run: |
@@ -42,6 +43,7 @@ jobs:
           echo "Build completed successfully"
           # Simulate build time
           sleep 10
+          echo "Successfully built application"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -55,10 +57,16 @@ jobs:
       - build
     if: ${{ success() && inputs.sequential == true }}
     uses: remypar5/gh-parallel-actions/.github/workflows/verify.yaml@main
+    with:
+      ref: ${{ inputs.ref }}
+      node_version: ${{ inputs.node_version }}
     
   verify-parallel:
     if: ${{ success() && inputs.sequential == false }}
     uses: remypar5/gh-parallel-actions/.github/workflows/verify.yaml@main
+    with:
+      ref: ${{ inputs.ref }}
+      node_version: ${{ inputs.node_version }}
 
   aftercare:
     runs-on: ubuntu-latest

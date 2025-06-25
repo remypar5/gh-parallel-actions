@@ -13,6 +13,7 @@ jobs:
     name: Build And Verify
     uses: remypar5/gh-parallel-actions/.github/workflows/build-and-verify.yaml@main
     with:
+      ref: ${{ github.ref }}
       sequential: ${{ inputs.sequential }}
 
   process-build:
