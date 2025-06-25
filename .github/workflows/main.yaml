@@ -10,15 +10,10 @@ on:
 
 jobs:
   build-and-verify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Build And Verify
-        uses: ./build-and-verify.yaml
-        with:
-          sequential: ${{ inputs.sequential }}
+    name: Build And Verify
+    uses: remypar5/gh-parallel-actions/.github/workflows/build-and-verify.yaml@main
+    with:
+      sequential: ${{ inputs.sequential }}
 
   process-build:
     runs-on: ubuntu-latest
