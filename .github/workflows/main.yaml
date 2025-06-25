@@ -12,11 +12,11 @@ jobs:
     uses: remypar5/gh-parallel-actions/.github/workflows/build-and-verify.yaml@main
     with:
       ref: ${{ github.ref }}
-      sequential: ${{ matrix.sequential }}
+      run-type: ${{ matrix.run-type }}
       node_version: 18
     strategy:
       matrix:
-        sequential:
+        run-type:
           - 'sequential'
           - 'parallel'
 
