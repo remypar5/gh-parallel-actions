@@ -1,0 +1,52 @@
+name: Build and Verify Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      sequential:
+        type: boolean
+        default: true
+        description: run the build and verify jobs in sequence (default) or in parallel
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build And Verify
+        uses: ./github/workflows/build-and-verify.yaml
+        with:
+          sequential: ${{ inputs.sequential }}
+
+  process-build:
+    runs-on: ubuntu-latest
+    needs: build-and-verify
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: build-output/
+
+      - name: Process build
+        run: |
+          echo "Processing artifacts from both build and verify jobs..."
+          echo "Build artifacts:"
+          ls -la build-output/
+          echo "Build processing completed"
+  
+  process-verify:
+    runs-on: ubuntu-latest
+    needs: build-and-verify
+    steps:
+      - name: Download verification artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: verification-artifacts
+          path: verification-output/
+
+      - name: Process artifacts
+        run: |
+          echo "Processing artifacts from both build and verify jobs..."
+          echo "Verification artifacts:"
+          ls -la verification-output/
+          echo "Verify processing completed"
