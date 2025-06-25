@@ -1,4 +1,4 @@
-name: Main Workflow
+name: Parallel Workflow
 
 on:
   workflow_dispatch:
@@ -9,14 +9,7 @@ jobs:
     uses: remypar5/gh-parallel-actions/.github/workflows/build-and-verify.yaml@main
     with:
       ref: ${{ github.ref }}
-      sequential: ${{ matrix.sequential }}
-      node_version: 18
-    strategy:
-      matrix:
-        sequential:
-          - true
-          - false
-
+      sequential: false
 
   process-build:
     runs-on: ubuntu-latest

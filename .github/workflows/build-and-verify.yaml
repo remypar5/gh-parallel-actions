@@ -72,7 +72,7 @@ jobs:
 
   aftercare:
     runs-on: ubuntu-latest
-    if: ${{ success() }}
+    if: ${{ always() }}
     needs: 
       - build
       - verify-sequential
