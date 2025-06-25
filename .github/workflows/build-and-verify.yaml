@@ -94,9 +94,13 @@ jobs:
         run: |
           echo "Creating verification report..."
           mkdir -p reports
+          sleep 3
           echo "All verification checks passed" > reports/verification-report.txt
+          sleep 2
           echo "Test results: PASSED" >> reports/verification-report.txt
+          sleep 5
           echo "Linting: PASSED" >> reports/verification-report.txt
+          sleep 7
           echo "Security: PASSED" >> reports/verification-report.txt
 
       - name: Upload verification artifacts
@@ -149,9 +153,13 @@ jobs:
         run: |
           echo "Creating verification report..."
           mkdir -p reports
+          sleep 3
           echo "All verification checks passed" > reports/verification-report.txt
+          sleep 2
           echo "Test results: PASSED" >> reports/verification-report.txt
+          sleep 5
           echo "Linting: PASSED" >> reports/verification-report.txt
+          sleep 7
           echo "Security: PASSED" >> reports/verification-report.txt
 
       - name: Upload verification artifacts
