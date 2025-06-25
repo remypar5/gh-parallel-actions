@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build And Verify
-        uses: ./github/workflows/build-and-verify.yaml
+        uses: ./build-and-verify.yaml
         with:
           sequential: ${{ inputs.sequential }}
 
