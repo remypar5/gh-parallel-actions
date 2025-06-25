@@ -66,7 +66,7 @@ jobs:
       
   verify-parallel:
     name: "Verify for a ${{ inputs.run-type }} run"
-    if: ${{ success() && inputs.run-type == false }}
+    if: ${{ success() && inputs.run-type == 'parallel' }}
     uses: remypar5/gh-parallel-actions/.github/workflows/verify.yaml@main
     with:
       ref: ${{ inputs.ref }}
