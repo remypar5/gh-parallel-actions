@@ -9,8 +9,8 @@ on:
         type: number
         required: false
         default: 18
-      sequential:
-        type: boolean
+      run-type:
+        type: string
         required: true
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Download build artifacts
-        if: ${{ inputs.sequential == true }}
+        if: ${{ inputs.run-type == 'sequential' }}
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts

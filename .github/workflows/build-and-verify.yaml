@@ -10,12 +10,13 @@ on:
         type: number
         required: false
         default: 18
-      sequential:
-        type: boolean
+      run-type:
+        type: string
         required: true
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -53,22 +54,24 @@ jobs:
           retention-days: 1
 
   verify-sequential:
+    name: "Verify for a ${{ inputs.run-type }} run"
     needs:
       - build
-    if: ${{ success() && inputs.sequential == true }}
+    if: ${{ success() && inputs.run-type == 'sequential' }}
     uses: remypar5/gh-parallel-actions/.github/workflows/verify.yaml@main
     with:
       ref: ${{ inputs.ref }}
       node_version: ${{ inputs.node_version }}
-      sequential: ${{ inputs.sequential }}
+      run-type: ${{ inputs.run-type }}
       
   verify-parallel:
-    if: ${{ success() && inputs.sequential == false }}
+    name: "Verify for a ${{ inputs.run-type }} run"
+    if: ${{ success() && inputs.run-type == false }}
     uses: remypar5/gh-parallel-actions/.github/workflows/verify.yaml@main
     with:
       ref: ${{ inputs.ref }}
       node_version: ${{ inputs.node_version }}
-      sequential: ${{ inputs.sequential }}
+      run-type: ${{ inputs.run-type }}
 
   aftercare:
     runs-on: ubuntu-latest
@@ -77,9 +80,7 @@ jobs:
       - build
       - verify-sequential
       - verify-parallel
-    env:
-      RUN_TYPE: ${{ inputs.sequential == true && 'sequential' || 'parallel' }}
     steps:
       - name: Finish up
         run: |
-          echo "Finished a ${{ env.RUN_TYPE }} Build and Verify workflow"
+          echo "Finished a ${{ inputs.run-type }} Build and Verify workflow"
