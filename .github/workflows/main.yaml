@@ -1,53 +1,23 @@
 name: Main Workflow
 
 on:
-  workflow_call:
-    inputs:
-      run-type:
-        type: string
-        required: true
-        description: The type of the run. Either 'sequential' or 'parallel'.
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  build-and-verify:
-    name: Build And Verify
-    uses: remypar5/gh-parallel-actions/.github/workflows/build-and-verify.yaml@main
-    with:
-      ref: ${{ github.ref }}
-      run-type: ${{ inputs.run-type }}
-      node_version: 18
+  run-sequential:
+    uses: remypar5/gh-parallel-actions/.github/workflows/sequential.yaml@main
 
+  run-parallel:
+    uses: remypar5/gh-parallel-actions/.github/workflows/parallel.yaml@main
 
-  process-build:
+  ready:
     runs-on: ubuntu-latest
-    needs: build-and-verify
+    needs:
+      - run-sequential
+      - run-parallel
     steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts-${{ inputs.run-type }}
-          path: build-output/
-
-      - name: Process build
-        run: |
-          echo "Processing artifacts from both build and verify jobs..."
-          echo "Build artifacts:"
-          ls -la build-output/
-          echo "Build processing completed"
-  
-  process-verify:
-    runs-on: ubuntu-latest
-    needs: build-and-verify
-    steps:
-      - name: Download verification artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: verification-artifacts-${{ inputs.run-type }}
-          path: verification-output/
-
-      - name: Process artifacts
-        run: |
-          echo "Processing artifacts from both build and verify jobs..."
-          echo "Verification artifacts:"
-          ls -la verification-output/
-          echo "Verify processing completed"
+      - name: Closing thoughts
+        run: echo "I'm done here"

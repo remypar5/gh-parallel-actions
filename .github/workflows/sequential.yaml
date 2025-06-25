@@ -1,13 +1,47 @@
 name: Sequential workflow
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+  workflow_call:
 
 jobs:
-  run-sequential:
-    uses: remypar5/gh-parallel-actions/.github/workflows/main.yaml@main
+  build-and-verify:
+    name: Build And Verify
+    uses: remypar5/gh-parallel-actions/.github/workflows/build-and-verify.yaml@main
     with:
+      ref: ${{ github.ref }}
       run-type: sequential
+      node_version: 18
+
+  process-build:
+    runs-on: ubuntu-latest
+    needs: build-and-verify
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-sequential
+          path: build-output/
+
+      - name: Process build
+        run: |
+          echo "Processing artifacts from both build and verify jobs..."
+          echo "Build artifacts:"
+          ls -la build-output/
+          echo "Build processing completed"
+  
+  process-verify:
+    runs-on: ubuntu-latest
+    needs: build-and-verify
+    steps:
+      - name: Download verification artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: verification-artifacts-sequential
+          path: verification-output/
+
+      - name: Process artifacts
+        run: |
+          echo "Processing artifacts from both build and verify jobs..."
+          echo "Verification artifacts:"
+          ls -la verification-output/
+          echo "Verify processing completed"
