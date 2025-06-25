@@ -1,4 +1,4 @@
-name: Build and Verify Workflow
+name: Main Workflow
 
 on:
   workflow_dispatch:
