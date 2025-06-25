@@ -60,13 +60,15 @@ jobs:
     with:
       ref: ${{ inputs.ref }}
       node_version: ${{ inputs.node_version }}
-    
+      sequential: ${{ inputs.sequential }}
+      
   verify-parallel:
     if: ${{ success() && inputs.sequential == false }}
     uses: remypar5/gh-parallel-actions/.github/workflows/verify.yaml@main
     with:
       ref: ${{ inputs.ref }}
       node_version: ${{ inputs.node_version }}
+      sequential: ${{ inputs.sequential }}
 
   aftercare:
     runs-on: ubuntu-latest
