@@ -33,7 +33,7 @@ jobs:
         run: |
           echo "Installing dependencies..."
           # Simulate dependency installation
-          sleep 5
+          sleep 2
           echo "Successfully installed dependencies"
 
       - name: Build application
@@ -43,7 +43,7 @@ jobs:
           echo "// Built application content" > dist/app.js
           echo "Build completed successfully"
           # Simulate build time
-          sleep 10
+          sleep 20
           echo "Successfully built application"
 
       - name: Upload build artifacts

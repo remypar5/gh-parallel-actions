@@ -39,31 +39,31 @@ jobs:
           echo "Running tests..."
           echo "Testing built application from dist/app.js"
           # Simulate test execution
-          sleep 8
+          sleep 2
 
       - name: Run linting
         run: |
           echo "Running linting checks..."
           # Simulate linting
-          sleep 3
+          sleep 2
 
       - name: Security scan
         run: |
           echo "Running security scans..."
           # Simulate security scanning
-          sleep 5
+          sleep 2
 
       - name: Create verification report
         run: |
           echo "Creating verification report..."
           mkdir -p reports
-          sleep 3
+          sleep 2
           echo "All verification checks passed" > reports/verification-report.txt
           sleep 2
           echo "Test results: PASSED" >> reports/verification-report.txt
-          sleep 5
+          sleep 2
           echo "Linting: PASSED" >> reports/verification-report.txt
-          sleep 7
+          sleep 2
           echo "Security: PASSED" >> reports/verification-report.txt
 
       - name: Upload verification artifacts
