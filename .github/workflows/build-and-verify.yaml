@@ -61,6 +61,10 @@ jobs:
     outputs:
       verification_status: ${{ steps.run-verification.outputs.verification-status }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
       - name: Run verification
         id: run-verification
         uses: ./.github/actions/verify
@@ -76,6 +80,10 @@ jobs:
     outputs:
       verification_status: ${{ steps.run-verification.outputs.verification-status }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
       - name: Run verification
         id: run-verification
         uses: ./.github/actions/verify
