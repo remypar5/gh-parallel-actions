@@ -1,0 +1,94 @@
+name: 'Verify'
+description: 'Run tests, linting, and security scans on the application'
+author: remypar5
+
+inputs:
+  ref:
+    description: 'Git reference to checkout'
+    required: true
+  node_version:
+    description: 'Node.js version to use'
+    required: false
+    default: '18'
+  run-type:
+    description: 'Type of run (sequential or parallel)'
+    required: true
+    default: ''
+
+outputs:
+  verification-status:
+    description: 'Status of the verification process'
+    value: ${{ steps.verify-status.outputs.status }}
+  report-path:
+    description: 'Path to the verification report'
+    value: 'reports/verification-report.txt'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node_version }}
+
+    - name: Download build artifacts
+      if: ${{ inputs.run-type == 'sequential' }}
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts-${{ inputs.run-type }}
+        path: dist/
+
+    - name: Run tests
+      shell: bash
+      run: |
+        echo "Running tests..."
+        echo "Testing built application from dist/app.js"
+        # Simulate test execution
+        sleep 2
+
+    - name: Run linting
+      shell: bash
+      run: |
+        echo "Running linting checks..."
+        # Simulate linting
+        sleep 2
+
+    - name: Security scan
+      shell: bash
+      run: |
+        echo "Running security scans..."
+        # Simulate security scanning
+        sleep 2
+
+    - name: Create verification report
+      shell: bash
+      run: |
+        echo "Creating verification report..."
+        mkdir -p reports
+        sleep 2
+        echo "All verification checks passed" > reports/verification-report.txt
+        sleep 2
+        echo "Test results: PASSED" >> reports/verification-report.txt
+        sleep 2
+        echo "Linting: PASSED" >> reports/verification-report.txt
+        sleep 2
+        echo "Security: PASSED" >> reports/verification-report.txt
+
+    - name: Set verification status
+      id: verify-status
+      shell: bash
+      run: |
+        echo "status=success" >> $GITHUB_OUTPUT
+        echo "Verification completed successfully"
+
+    - name: Upload verification artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: verification-artifacts-${{ inputs.run-type }}
+        path: reports/
+        retention-days: 1

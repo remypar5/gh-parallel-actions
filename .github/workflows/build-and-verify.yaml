@@ -52,35 +52,54 @@ jobs:
           name: build-artifacts-${{ inputs.run-type }}
           path: dist/
           retention-days: 1
-
   verify-sequential:
     name: "Verify for a ${{ inputs.run-type }} run"
+    runs-on: ubuntu-latest
     needs:
       - build
     if: ${{ success() && inputs.run-type == 'sequential' }}
-    uses: remypar5/gh-parallel-actions/.github/workflows/verify.yaml@main
-    with:
-      ref: ${{ inputs.ref }}
-      node_version: ${{ inputs.node_version }}
-      run-type: ${{ inputs.run-type }}
+    outputs:
+      verification_status: ${{ steps.run-verification.outputs.verification-status }}
+    steps:
+      - name: Run verification
+        id: run-verification
+        uses: ./.github/actions/verify
+        with:
+          ref: ${{ inputs.ref }}
+          node_version: ${{ inputs.node_version }}
+          run-type: ${{ inputs.run-type }}
       
   verify-parallel:
     name: "Verify for a ${{ inputs.run-type }} run"
+    runs-on: ubuntu-latest
     if: ${{ success() && inputs.run-type == 'parallel' }}
-    uses: remypar5/gh-parallel-actions/.github/workflows/verify.yaml@main
-    with:
-      ref: ${{ inputs.ref }}
-      node_version: ${{ inputs.node_version }}
-      run-type: ${{ inputs.run-type }}
+    outputs:
+      verification_status: ${{ steps.run-verification.outputs.verification-status }}
+    steps:
+      - name: Run verification
+        id: run-verification
+        uses: ./.github/actions/verify
+        with:
+          ref: ${{ inputs.ref }}
+          node_version: ${{ inputs.node_version }}
+          run-type: ${{ inputs.run-type }}
 
   aftercare:
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    needs: 
+    needs:
       - build
       - verify-sequential
       - verify-parallel
+
     steps:
+      - name: Print verification status
+        env:
+          VERIFICATION_STATUS: ${{ needs.verify-sequential.outputs.verification_status || needs.verify-parallel.outputs.verification_status || 'FAILED' }}
+        run: |
+          echo "Verification status: ${{ env.VERIFICATION_STATUS }}"
+
       - name: Finish up
         run: |
           echo "Finished a ${{ inputs.run-type }} Build and Verify workflow"
+          echo "Good bye!"
