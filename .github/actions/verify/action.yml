@@ -18,7 +18,7 @@ inputs:
 outputs:
   verification-status:
     description: 'Status of the verification process'
-    value: ${{ steps.verify-status.outputs.status }}
+    value: ${{ steps.verify-status.outputs.status || 'failed' }}
   report-path:
     description: 'Path to the verification report'
     value: 'reports/verification-report.txt'
@@ -35,12 +35,6 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node_version }}
-
-    - name: Set default verification status
-      id: verify-status
-      shell: bash
-      run: |
-        echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Download build artifacts
       if: ${{ inputs.run-type == 'sequential' }}
